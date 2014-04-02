@@ -15,22 +15,18 @@ public final class InvItemStack extends JsObject { // ModLoader
     private static final int ID_GET_ITEM_DAMAGE = 101;
     private static final int ID_SET_ITEM_DAMAGE = 102;
     public static final int ID_CONSTRUCT = 103;
+    private static final int ID_STACK_SIZE = 104;
+    private static final int ID_ITEM_ID = 106;
+    public static final JsObject ITEMSTACK_PROTOTYPE = new JsObject(OBJECT_PROTOTYPE).addNative("getItem", ID_GET_ITEM, 0)
+            .addNative("getItemDamage", ID_GET_ITEM_DAMAGE, 0).addNative("setItemDamage", ID_SET_ITEM_DAMAGE, 1).addNative("stackSize", ID_STACK_SIZE, -1)
+            .addNative("itemID", ID_ITEM_ID, -1);
 
     // ModLoader end
 
     public InvItemStack(int itemId, int stackSize) {
-        super(JsObject.OBJECT_PROTOTYPE); // ModLoader
+        this();
         this.itemID = itemId;
         this.stackSize = stackSize;
-        // ModLoader start
-        // Methods
-        addNative("getItem", ID_GET_ITEM, 0);
-        addNative("getItemDamage", ID_GET_ITEM_DAMAGE, 0);
-        addNative("setItemDamage", ID_SET_ITEM_DAMAGE, 1);
-        // Properties
-        addVar("stackSize", new Integer(stackSize));
-        addVar("itemID", new Integer(itemID));
-        // ModLoader end
     }
 
     public InvItemStack(int itemID) {
@@ -42,7 +38,7 @@ public final class InvItemStack extends JsObject { // ModLoader
     }
 
     public InvItemStack() {
-        super(OBJECT_PROTOTYPE);
+        super(ITEMSTACK_PROTOTYPE);
     }
 
     public InvItem getItem() {
@@ -101,6 +97,18 @@ public final class InvItemStack extends JsObject { // ModLoader
             break;
         case ID_SET_ITEM_DAMAGE:
             setItemDamage(stack.getInt(sp + 2));
+            break;
+        case ID_STACK_SIZE:
+            stack.setInt(sp, stackSize);
+            break;
+        case ID_STACK_SIZE + 1:
+            stackSize = stack.getInt(sp);
+            break;
+        case ID_ITEM_ID:
+            stack.setInt(sp, itemID);
+            break;
+        case ID_ITEM_ID + 1:
+            itemID = stack.getInt(sp);
             break;
         default:
             super.evalNative(id, stack, sp, parCount);

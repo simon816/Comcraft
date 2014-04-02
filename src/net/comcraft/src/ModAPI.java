@@ -68,7 +68,7 @@ public class ModAPI extends JsObject implements JsObjectFactory {
     private void addInstantiableObjects() {
         addVar("AxisAlignedBB", new JsFunction(this, FACTORY_ID_AABB, AxisAlignedBB.AABB_PROTOTYPE, AxisAlignedBB.ID_CONSTRUCT, 6));
         addVar("Vec3D", new JsFunction(this, FACTORY_ID_VEC3D, Vec3D.VEC3D_PROTOTYPE, Vec3D.ID_CONSTRUCT, 3));
-        addVar("InvItemStack", new JsFunction(this, FACTORY_ID_INVITEMSTACK, OBJECT_PROTOTYPE, InvItemStack.ID_CONSTRUCT, 2));
+        addVar("InvItemStack", new JsFunction(this, FACTORY_ID_INVITEMSTACK, InvItemStack.ITEMSTACK_PROTOTYPE, InvItemStack.ID_CONSTRUCT, 2));
         addVar("Block", new JsFunction(this, FACTORY_ID_BLOCK, Block.BLOCK_PROTOTYPE, Block.ID_CONSTRUCT, 2));
         addVar("Transform", new JsFunction(this, FACTORY_ID_TRANSFORM, Transform.TRANSFORM_PROTOTYPE, Transform.ID_CONSTRUCT, 0));
         addVar("GuiButton", new JsFunction(this, FACTORY_ID_GUIBUTTON, GuiButton.GUIBUTTON_PROTOTYPE, GuiButton.ID_CONSTRUCT, 3));
