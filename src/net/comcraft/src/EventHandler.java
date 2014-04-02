@@ -39,6 +39,8 @@ public class EventHandler {
     }
 
     public void runEvent(String name, JsObject thisPtr, Object[] params) {
+        if (!hasEvent(name))
+            return;
         if (params == null) {
             params = new Object[0];
         }
@@ -119,6 +121,8 @@ public class EventHandler {
     }
 
     public Object getLastSuccess(String name) {
+        if (!hasEvent(name))
+            return null;
         Vector event = ((Vector[]) events.get(name))[1];
         Object r = null;
         for (int i = 0; i < event.size(); i++) {
