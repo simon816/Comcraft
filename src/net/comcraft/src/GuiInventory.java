@@ -24,7 +24,7 @@ public class GuiInventory extends GuiScreen implements GuiYesNoHost {
         cc.g.drawImage(inventoryImage, xInv, yInv, Graphics.TOP | Graphics.LEFT);
 
         guiContainer.drawContainer();
-        
+
         if (!Touch.isTouchSupported()) {
             cc.g.setColor(0xFFFFFF);
             drawStringWithShadow(cc.g, cc.langBundle.getText("Ingame.quickMenuInfo"), 3, Comcraft.screenHeight - 3, Graphics.LEFT | Graphics.BASELINE);
@@ -78,7 +78,13 @@ public class GuiInventory extends GuiScreen implements GuiYesNoHost {
     }
 
     public void clickedItemStack(InvItemStack itemStack) {
-        cc.player.inventory.setItemStackAt(cc.player.inventory.getSelectedElementNum(), itemStack);
+        int index = cc.player.inventory.getSelectedElementNum();
+        InvItemStack currStack = cc.player.inventory.getItemStackAt(index);
+        if (currStack.equals(itemStack)) {
+            currStack.stackSize += 1;
+        } else {
+            cc.player.inventory.setItemStackAt(index, itemStack);
+        }
     }
 
     public boolean doesGuiPauseGame() {

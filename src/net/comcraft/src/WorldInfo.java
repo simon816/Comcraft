@@ -11,6 +11,7 @@ public class WorldInfo {
      * 
      * 3 - CC 0.6
      * 4 - CCML 0.4
+     * 5 - CCML 0.6
      */
     private float worldVersion;
     private float spawnX;
@@ -19,7 +20,7 @@ public class WorldInfo {
     private int worldSize;
 
     public WorldInfo() {
-        worldVersion = 4;
+        worldVersion = 5;
     }
     
     public int getWorldSize() {
@@ -54,8 +55,8 @@ public class WorldInfo {
 
         player.loadFromDataInputStream(dataInputStream, worldVersion);
 
-        if (worldVersion < 4) {
-            worldVersion = 4;
+        if (worldVersion < 5) {
+            worldVersion = 5;
         }
     }
 }

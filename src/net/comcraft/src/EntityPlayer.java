@@ -307,8 +307,12 @@ public class EntityPlayer extends JsObject { // ModLoader
 
         for (int n = 0; n < fastSlotSize; ++n) {
             int id = dataInputStream.readInt();
+            int stackSize = 1;
+            if (worldVersion >= 5) {
+                stackSize = dataInputStream.read();
+            }
 
-            inventory.setItemStackAt(n, new InvItemStack(id));
+            inventory.setItemStackAt(n, new InvItemStack(id, stackSize));
         }
         if (worldVersion == 3) {
             return;
@@ -330,6 +334,8 @@ public class EntityPlayer extends JsObject { // ModLoader
 
         for (int n = 0; n < inventory.getFastSlotSize(); ++n) {
             dataOutputStream.writeInt(inventory.getItemStackAt(n).itemID);
+            // from CCML 0.6 (worldVersion 5)
+            dataOutputStream.write(inventory.getItemStackAt(n).stackSize);
         }
 
         // from CCML 0.4 (worldVersion 4)
@@ -396,11 +402,8 @@ public class EntityPlayer extends JsObject { // ModLoader
             stack.setBoolean(sp, commandsAllowed);
             break;
         case ID_X_POS + 1:
-            break;
         case ID_Y_POS + 1:
-            break;
         case ID_Z_POS + 1:
-            break;
         case ID_ROTATION_YAW + 1:
         case ID_ROTATION_PITCH + 1:
         case ID_COMMANDS_ALLOWED + 1:

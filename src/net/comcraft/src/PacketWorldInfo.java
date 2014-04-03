@@ -31,7 +31,7 @@ public class PacketWorldInfo extends Packet {
         dos.write(data);
         int n = dis.readInt();
         dos.writeInt(n);
-        data = new byte[n * 4];
+        data = new byte[n * 4 + (ver >= 5 ? n : 0)];
         dis.read(data);
         dos.write(data);
         if (ver > 3) {

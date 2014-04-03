@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.TextField;
@@ -51,7 +52,7 @@ public class GuiIngame extends GuiScreen implements GuiTextBoxHost {
                 drawStringWithShadow(cc.g, cc.langBundle.getText("Ingame.commandInfo"), 3, Comcraft.screenHeight - 3, Graphics.LEFT | Graphics.BASELINE);
             }
         }
-        
+
         if (cc.world.chunkProvider.getChunksQueueNum() > 0) {
             drawLoadingChunksImage();
         }
@@ -102,7 +103,10 @@ public class GuiIngame extends GuiScreen implements GuiTextBoxHost {
         if (slotId == 3) {
             cc.g.drawImage(cc.textureProvider.getImage("gui/slot_more.png"), x, y, Graphics.TOP | Graphics.LEFT);
         } else {
-            cc.g.drawImage(cc.textureProvider.getItemTexture(cc.player.inventory.getItemStackAt(slotId).getItem().getIconIndex()), x, y, Graphics.TOP | Graphics.LEFT);
+            InvItemStack itemStack = cc.player.inventory.getItemStackAt(slotId);
+            cc.g.drawImage(cc.textureProvider.getItemTexture(itemStack.getItem().getIconIndex()), x, y, Graphics.TOP | Graphics.LEFT);
+            Image stackImg = getStackSizeImage(itemStack);
+            cc.g.drawImage(stackImg, x + 4, (y + 46) - stackImg.getHeight(), Graphics.TOP | Graphics.LEFT);
         }
 
         cc.g.drawImage(cc.textureProvider.getImage("gui/slot.png"), x, y, Graphics.TOP | Graphics.LEFT);
@@ -110,6 +114,25 @@ public class GuiIngame extends GuiScreen implements GuiTextBoxHost {
         if (cc.player.inventory.getSelectedElementNum() == slotId) {
             cc.g.drawImage(cc.textureProvider.getImage("gui/slot_selection.png"), x - 2, y - 2, Graphics.TOP | Graphics.LEFT);
         }
+    }
+
+    private Image getStackSizeImage(InvItemStack stack) {
+        String text = "" + stack.stackSize;
+        Font font = cc.g.getFont();
+        int width = font.stringWidth(text);
+        int height = font.getHeight();
+        Image img = Image.createImage(width, height);
+        Graphics g = img.getGraphics();
+        g.setColor(200, 200, 200);
+        GuiElement.drawStringWithShadow(g, text, 0, 0, Graphics.TOP | Graphics.LEFT);
+        int[] rgbData = new int[width * height];
+        img.getRGB(rgbData, 0, width, 0, 0, width, height);
+        for (int i = 0; i < rgbData.length; i++) {
+            if (rgbData[i] == 0xFFFFFFFF) {
+                rgbData[i] = 0x00000000;
+            }
+        }
+        return Image.createImage(Image.createRGBImage(rgbData, width, height, true), 0, 0, width, height, Sprite.TRANS_ROT90);
     }
 
     public void initIngameGui() {

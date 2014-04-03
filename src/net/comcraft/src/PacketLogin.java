@@ -39,7 +39,6 @@ public class PacketLogin extends Packet {
         if (username.toLowerCase().equals("player")) {
             username += "." + uniqueId;
         }
-        System.out.println(uniqueId);
         this.username = username;
     }
 

@@ -200,6 +200,7 @@ public class ServerGame implements LevelInfo, ChunkLoader {
         }
 
         private void writeToStream(Packet packet) throws IOException {
+            // #debug System.out.println("writeToStream " + packet);
             if (packet == null) {
                 return;
             }
