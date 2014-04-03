@@ -96,10 +96,10 @@ public class ModAPI extends JsObject implements JsObjectFactory {
             if (parCount < 2) {
                 throw new JsException("Not enough parameters to importFile");
             }
-            String pkg = "",
-            file = "";
+            String pkg = stack.getString(sp + 2);
+            String file = stack.getString(sp + 3);
             try {
-                stack.setBoolean(sp, cc.modLoader.executeModInNs(pkg = stack.getString(sp + 2), file = stack.getString(sp + 3)));
+                stack.setBoolean(sp, cc.modLoader.executeModInNs(pkg, file));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new JsException("Import " + pkg + "." + file + " failed: " + e.getMessage());
