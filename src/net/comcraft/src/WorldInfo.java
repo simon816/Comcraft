@@ -18,11 +18,12 @@ public class WorldInfo {
     private float spawnY;
     private float spawnZ;
     private int worldSize;
+    private int worldTime;
 
     public WorldInfo() {
         worldVersion = 5;
     }
-    
+
     public int getWorldSize() {
         return worldSize;
     }
@@ -39,10 +40,11 @@ public class WorldInfo {
         dataOutputStream.writeFloat(worldVersion);
 
         dataOutputStream.writeInt(worldSize);
-        
+
         dataOutputStream.writeFloat(spawnX);
         dataOutputStream.writeFloat(spawnY);
         dataOutputStream.writeFloat(spawnZ);
+        dataOutputStream.writeInt(worldTime);
         player.writeToDataOutputStream(dataOutputStream);
     }
 
@@ -52,11 +54,26 @@ public class WorldInfo {
         spawnX = dataInputStream.readFloat();
         spawnY = dataInputStream.readFloat();
         spawnZ = dataInputStream.readFloat();
+        if (worldVersion >= 5) {
+            worldTime = dataInputStream.readInt();
+        }
 
         player.loadFromDataInputStream(dataInputStream, worldVersion);
 
         if (worldVersion < 5) {
             worldVersion = 5;
         }
+    }
+
+    public void addWorldTime(int t) {
+        worldTime += t;
+    }
+
+    public int getWorldTime() {
+        return worldTime;
+    }
+
+    public void setWorldTime(int t) {
+        worldTime = t;
     }
 }

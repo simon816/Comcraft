@@ -26,7 +26,7 @@ public class PacketWorldInfo extends Packet {
         float ver = dis.readFloat();
         dos.writeFloat(ver);
         byte[] data;
-        data = new byte[36];
+        data = new byte[40];
         dis.read(data);
         dos.write(data);
         int n = dis.readInt();
