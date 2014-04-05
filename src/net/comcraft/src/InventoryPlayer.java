@@ -4,6 +4,7 @@ package net.comcraft.src;
 // ModLoader start
 import com.google.minijoe.sys.JsArray;
 import com.google.minijoe.sys.JsObject;
+
 // ModLoader end
 public class InventoryPlayer extends JsObject { // ModLoader
 
@@ -16,8 +17,9 @@ public class InventoryPlayer extends JsObject { // ModLoader
     private static final int ID_GET_ITEM_STACK_AT = 103;
     private static final int ID_SET_ITEM_STACK_AT = 104;
     private static final int ID_GET_FAST_SLOT_SIZE = 105;
+
     // ModLoader end
-    
+
     public InventoryPlayer() {
         super(JsObject.OBJECT_PROTOTYPE); // ModLoader
         selectedElement = 0;
@@ -40,60 +42,64 @@ public class InventoryPlayer extends JsObject { // ModLoader
     public int getSelectedElementNum() {
         return selectedElement;
     }
-    
+
     public InvItemStack getSelectedItemStack() {
         return elementsList[selectedElement];
     }
-    
+
     public void setSelectedElement(int element) {
         selectedElement = element;
     }
-    
+
     public InvItemStack getItemStackAt(int index) {
         if (index < 0 || index >= elementsList.length) {
             return null;
         }
-        
+
         return elementsList[index];
     }
-    
+
     public void setItemStackAt(int index, InvItemStack itemStack) {
         if (index < 0 || index >= elementsList.length) {
             return;
         }
-        
-        elementsList[index] = itemStack;
+        if (itemStack == null || itemStack.stackSize == 0 || itemStack.itemID == 0) {
+            elementsList[index] = null;
+        } else {
+            elementsList[index] = itemStack;
+        }
     }
-    
+
     public int getFastSlotSize() {
         return 3;
     }
+
     // ModLoader start
     public void evalNative(int id, JsArray stack, int sp, int parCount) {
-        switch(id) {
+        switch (id) {
         case ID_GET_SELECTED_ELEMENT_NUM:
-            stack.setInt(sp,getSelectedElementNum());
+            stack.setInt(sp, getSelectedElementNum());
             break;
         case ID_GET_SELECTED_ITEM_STACK:
-            stack.setObject(sp,getSelectedItemStack());
+            stack.setObject(sp, getSelectedItemStack());
             break;
         case ID_SET_SELECTED_ELEMENT:
-            setSelectedElement(stack.getInt(sp+2));
+            setSelectedElement(stack.getInt(sp + 2));
             break;
         case ID_GET_ITEM_STACK_AT:
-            stack.setObject(sp,getItemStackAt(stack.getInt(sp+2)));
+            stack.setObject(sp, getItemStackAt(stack.getInt(sp + 2)));
             break;
         case ID_SET_ITEM_STACK_AT:
-            setItemStackAt(stack.getInt(sp+2), (InvItemStack) stack.getObject(sp+3));
+            setItemStackAt(stack.getInt(sp + 2), (InvItemStack) stack.getObject(sp + 3));
             break;
         case ID_GET_FAST_SLOT_SIZE:
-            stack.setInt(sp,getFastSlotSize());
+            stack.setInt(sp, getFastSlotSize());
             break;
 
-            default:
-                super.evalNative(id, stack, sp, parCount);
+        default:
+            super.evalNative(id, stack, sp, parCount);
         }
     }
     // ModLoader end
-    
+
 }

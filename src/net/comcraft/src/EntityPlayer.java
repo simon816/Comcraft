@@ -333,9 +333,10 @@ public class EntityPlayer extends JsObject { // ModLoader
         dataOutputStream.writeInt(inventory.getFastSlotSize());
 
         for (int n = 0; n < inventory.getFastSlotSize(); ++n) {
-            dataOutputStream.writeInt(inventory.getItemStackAt(n).itemID);
+            InvItemStack stack = inventory.getItemStackAt(n);
+            dataOutputStream.writeInt(stack != null ? stack.itemID : 0);
             // from CCML 0.6 (worldVersion 5)
-            dataOutputStream.write(inventory.getItemStackAt(n).stackSize);
+            dataOutputStream.write(stack != null ? stack.stackSize : 0);
         }
 
         // from CCML 0.4 (worldVersion 4)

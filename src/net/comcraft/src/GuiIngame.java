@@ -104,9 +104,11 @@ public class GuiIngame extends GuiScreen implements GuiTextBoxHost {
             cc.g.drawImage(cc.textureProvider.getImage("gui/slot_more.png"), x, y, Graphics.TOP | Graphics.LEFT);
         } else {
             InvItemStack itemStack = cc.player.inventory.getItemStackAt(slotId);
-            cc.g.drawImage(cc.textureProvider.getItemTexture(itemStack.getItem().getIconIndex()), x, y, Graphics.TOP | Graphics.LEFT);
-            Image stackImg = getStackSizeImage(itemStack);
-            cc.g.drawImage(stackImg, x + 4, (y + 46) - stackImg.getHeight(), Graphics.TOP | Graphics.LEFT);
+            if (itemStack != null) {
+                cc.g.drawImage(cc.textureProvider.getItemTexture(itemStack.getItem().getIconIndex()), x, y, Graphics.TOP | Graphics.LEFT);
+                Image stackImg = getStackSizeImage(itemStack);
+                cc.g.drawImage(stackImg, x + 4, (y + 46) - stackImg.getHeight(), Graphics.TOP | Graphics.LEFT);
+            }
         }
 
         cc.g.drawImage(cc.textureProvider.getImage("gui/slot.png"), x, y, Graphics.TOP | Graphics.LEFT);

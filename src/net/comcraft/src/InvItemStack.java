@@ -42,6 +42,9 @@ public final class InvItemStack extends JsObject { // ModLoader
     }
 
     public InvItem getItem() {
+        if (itemID == 0 || stackSize == 0) {
+            return null;
+        }
         InvItem item = InvItem.itemsList[itemID];
         if (item == null) {
             throw new ComcraftException("Unknown item id " + itemID, null);

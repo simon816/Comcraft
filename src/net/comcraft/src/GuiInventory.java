@@ -80,11 +80,11 @@ public class GuiInventory extends GuiScreen implements GuiYesNoHost {
     public void clickedItemStack(InvItemStack itemStack) {
         int index = cc.player.inventory.getSelectedElementNum();
         InvItemStack currStack = cc.player.inventory.getItemStackAt(index);
-        if (currStack.equals(itemStack)) {
+        if (currStack != null && currStack.equals(itemStack)) {
             currStack.stackSize += 1;
-        } else {
-            cc.player.inventory.setItemStackAt(index, itemStack);
+            itemStack = currStack;
         }
+        cc.player.inventory.setItemStackAt(index, itemStack);
     }
 
     public boolean doesGuiPauseGame() {
