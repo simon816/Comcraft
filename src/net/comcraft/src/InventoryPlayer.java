@@ -1,4 +1,3 @@
-
 package net.comcraft.src;
 
 // ModLoader start
@@ -10,6 +9,7 @@ public class InventoryPlayer extends JsObject { // ModLoader
 
     private int selectedElement;
     private InvItemStack[] elementsList;
+    private ServerGame server;
     // ModLoader start
     private static final int ID_GET_SELECTED_ELEMENT_NUM = 100;
     private static final int ID_GET_SELECTED_ITEM_STACK = 101;
@@ -38,7 +38,12 @@ public class InventoryPlayer extends JsObject { // ModLoader
         // Properties
         // ModLoader end
     }
-    
+
+    public InventoryPlayer(ServerGame server) {
+        this();
+        this.server = server;
+    }
+
     public int getSelectedElementNum() {
         return selectedElement;
     }
@@ -67,6 +72,9 @@ public class InventoryPlayer extends JsObject { // ModLoader
             elementsList[index] = null;
         } else {
             elementsList[index] = itemStack;
+        }
+        if (server != null) {
+            server.playerInventoryChanged(index, itemStack);
         }
     }
 

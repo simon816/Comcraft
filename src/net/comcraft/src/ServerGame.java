@@ -32,6 +32,10 @@ public class ServerGame implements LevelInfo, ChunkLoader {
 
     private Hashtable onlinePlayers;
     private int id;
+    /**
+     * When loading world in handleWorldInfo, the player inventory gets set. This boolean ensures the playerInventoryChanged does not fire
+     */
+    private boolean blockInvChange;
 
     public ServerGame(Comcraft cc, String ip) {
         this.cc = cc;
@@ -121,7 +125,7 @@ public class ServerGame implements LevelInfo, ChunkLoader {
     }
 
     public void saveWorldInfo(WorldInfo worldInfo, EntityPlayer player) {
-        injectDisconnectPacket(player);
+        injectDisconnectPacket();
     }
 
     public ChunkLoader getChunkLoader(World world) {
@@ -280,12 +284,14 @@ public class ServerGame implements LevelInfo, ChunkLoader {
     }
 
     public void handleWorldInfo(DataInputStream dis) {
+        blockInvChange = true;
         worldInfo = new WorldInfo();
         try {
             worldInfo.loadWorldInfo(dis, cc.player);
         } catch (IOException e) {
             // #debug e.printStackTrace();
         }
+        blockInvChange = false;
         cc.world = new World(cc, this);
         cc.displayGuiScreen(new GuiLoadingWorld());
         cc.isGamePaused = false;
@@ -335,10 +341,9 @@ public class ServerGame implements LevelInfo, ChunkLoader {
         this.chunk = chunk;
     }
 
-    private void injectDisconnectPacket(EntityPlayer player) {
+    private void injectDisconnectPacket() {
         try {
             // The game exits too quickly, need to inject these packets directly into the stream.
-            sender.writeToStream(new PacketPlayerData(player));
             sender.writeToStream(new PacketDisconnect());
         } catch (IOException e) {
             // #debug e.printStackTrace();
@@ -346,7 +351,7 @@ public class ServerGame implements LevelInfo, ChunkLoader {
     }
 
     public void handleDisconnect(String reason, PacketDisconnect p) {
-        injectDisconnectPacket(cc.player);
+        injectDisconnectPacket();
         quitServer(reason);
     }
 
@@ -376,5 +381,17 @@ public class ServerGame implements LevelInfo, ChunkLoader {
 
     public void playerMoved(EntityPlayer player) {
         sender.sendPacket(new PacketPlayerData(id, player.getPosition()));
+    }
+
+    public void playerInventoryChanged(int index, InvItemStack itemStack) {
+        if (!blockInvChange) {
+            sender.sendPacket(new PacketPlayerData(index, itemStack));
+        }
+    }
+
+    public void handleInventoryChange(int index, InvItemStack itemStack) {
+        blockInvChange = true;
+        cc.player.inventory.setItemStackAt(index, itemStack);
+        blockInvChange = false;
     }
 }

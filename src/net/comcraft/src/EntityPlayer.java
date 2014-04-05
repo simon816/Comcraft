@@ -93,6 +93,7 @@ public class EntityPlayer extends JsObject { // ModLoader
     public EntityPlayer(Comcraft cc, ServerGame server) {
         this(cc);
         this.server = server;
+        inventory = new InventoryPlayer(server);
     }
 
     public void setPlayerOnWorldCenter(int worldSize) {

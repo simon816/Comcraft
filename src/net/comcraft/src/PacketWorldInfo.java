@@ -1,7 +1,6 @@
 package net.comcraft.src;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,30 +16,15 @@ public class PacketWorldInfo extends Packet {
     public void writeData(DataOutputStream dos) throws IOException {
     }
 
-    /*
-     * A bad way to pull all data from response and store in a temporary stream for processing later.
-     */
     public void readData(DataInputStream dis) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(baos);
-        float ver = dis.readFloat();
-        dos.writeFloat(ver);
-        byte[] data;
-        data = new byte[40];
+        byte[] data = new byte[dis.readInt()];
+        System.out.println("length = " + data.length);
         dis.read(data);
-        dos.write(data);
-        int n = dis.readInt();
-        dos.writeInt(n);
-        data = new byte[n * 4 + (ver >= 5 ? n : 0)];
-        dis.read(data);
-        dos.write(data);
-        if (ver > 3) {
-            dos.writeBoolean(dis.readBoolean());
-        }
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
         this.dis = new DataInputStream(bais);
 
         int players = dis.read() & 0xFF;
+        System.out.println("players = " + players);
         existingPlayers = new Object[players][2];
         for (int i = 0; i < players; i++) {
             int pId = dis.readInt();
