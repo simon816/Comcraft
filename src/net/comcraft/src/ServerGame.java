@@ -344,7 +344,7 @@ public class ServerGame implements LevelInfo, ChunkLoader {
     private void injectDisconnectPacket() {
         try {
             // The game exits too quickly, need to inject these packets directly into the stream.
-            sender.writeToStream(new PacketDisconnect());
+            sender.writeToStream(new PacketDisconnect(cc.player));
         } catch (IOException e) {
             // #debug e.printStackTrace();
         }
