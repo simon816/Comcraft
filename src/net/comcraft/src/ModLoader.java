@@ -11,6 +11,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import com.google.minijoe.sys.JsFunction;
+import com.google.minijoe.sys.JsSystem;
 import com.java4ever.apime.io.GZIP;
 
 import net.comcraft.client.Comcraft;
@@ -168,7 +169,13 @@ public class ModLoader {
     public boolean executeModInNs(String package_, String fname) throws Exception {
         Hashtable pkg;
         if (packages.containsKey(package_) && (pkg = (Hashtable) packages.get(package_)).containsKey(fname)) {
-            JsFunction.exec(new DataInputStream(new ByteArrayInputStream((byte[]) pkg.get(fname))), ModAPI.getInstance());
+            if (pkg.get(fname) != JsSystem.JS_NULL) {
+                // Once executed, the namespace contains the resulting stack.
+                // Therefore only execute if we haven't already.
+                // Use of JsSystem.JS_NULL because hashtables can't contain null.
+                JsFunction.exec(new DataInputStream(new ByteArrayInputStream((byte[]) pkg.get(fname))), ModAPI.getInstance());
+                pkg.put(fname, JsSystem.JS_NULL);
+            }
             return true;
         }
         return false;
