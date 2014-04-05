@@ -29,6 +29,10 @@ public class ServerGame implements LevelInfo, ChunkLoader {
     private GuiServerMessage guiscr;
     private Chunk chunk = null;
     private World world;
+    /**
+     * Server version compatible with
+     */
+    public static final int serverCompatVer = 2;
 
     private Hashtable onlinePlayers;
     private int id;
@@ -232,7 +236,7 @@ public class ServerGame implements LevelInfo, ChunkLoader {
                 return;
             }
             for (int i = 0; i < stack.length; i++) {
-                if (stack[i] != null) {
+                if (stack[i] != null && !closing) {
                     stack[i].process(handler);
                     stack[i] = null;
                     return;
@@ -303,12 +307,14 @@ public class ServerGame implements LevelInfo, ChunkLoader {
         guiscr.setText(reason);
         guiscr.buttonSetBack();
         cc.displayGuiScreen(guiscr);
-        cc.world.onWorldEnd();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
+        if (cc.world != null) { // The world may not have initialised before being disconnected
+            cc.world.onWorldEnd();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+            cc.world = null;
         }
-        cc.world = null;
     }
 
     public void handleBlockChange(PacketBlockChange p) {

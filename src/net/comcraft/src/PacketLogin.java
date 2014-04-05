@@ -45,6 +45,8 @@ public class PacketLogin extends Packet {
     public void writeData(DataOutputStream dos) throws IOException {
         dos.writeInt(uniqueId);
         dos.writeUTF(username);
+        dos.writeShort(ServerGame.serverCompatVer);
+        dos.writeShort(ModLoader.API_VERSION);
     }
 
     public void readData(DataInputStream dis) throws IOException {
